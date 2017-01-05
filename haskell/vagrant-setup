@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+update_apt() {
+  sudo apt-get update > /dev/null
+}
+
+install_with_apt() {
+  update_apt
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install $1
+}
+
+installed_with_apt() {
+  sudo dpkg -s $1 | grep "Status: install ok" > /dev/null
+}
+
+new_install_with_apt() {
+  if installed_with_apt $1; then
+    echo "$1 is already installed"
+  else
+    install_with_apt $1
+  fi
+}
+
+write_file() {
+  sudo cat > $1
+}
+
+download_to_file() {
+  if [ -f $2 ]; then
+    echo "skipping download, the file already exists"
+  else
+    curl $1 > $2
+  fi
+}
+
+# Install tools to compile software
+new_install_with_apt "build-essential"
+
+# Create directory for downloads
+mkdir -p /home/vagrant/downloads
+
+# Create directory for local installs
+mkdir -p /home/vagrant/local
+chown -R vagrant:vagrant /home/vagrant/local
+
+# Install various utilities
+new_install_with_apt "git-core"
+new_install_with_apt "curl"
+
+# Setup vim if required
+if installed_with_apt "vim"; then
+  echo "vim is already installed"
+else
+  install_with_apt "vim"
+  echo "EDITOR=\"vim\"" >> /home/vagrant/.profile
+fi
+
+# Install stack
+curl -sSL https://get.haskellstack.org/ | sh
+export PATH="$PATH:/root/.local/bin"
