@@ -58,3 +58,11 @@ fi
 # Install stack
 curl -sSL https://get.haskellstack.org/ | sh
 export PATH="$PATH:/root/.local/bin"
+
+# Install nodeJS
+curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+install_with_apt nodejs
+
+# GHCJS Deps
+install_with_apt libtinfo
+install_with_apt libtinfo-dev

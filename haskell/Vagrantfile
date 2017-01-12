@@ -8,6 +8,7 @@ Vagrant::Config.run do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "ubuntu/trusty64"
+  config.ssh.forward_x11 = true
 
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
@@ -27,13 +28,12 @@ Vagrant::Config.run do |config|
   # computers to access the VM, whereas host only networking does not.
   # config.vm.forward_port 80, 8080
 
-  # Set RAM to 1 GB
-  config.vm.customize ["modifyvm", :id, "--memory", 2048]
+  config.vm.customize ["modifyvm", :id, "--memory", 4096]
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
-  config.vm.share_folder "v-root", "/shared", "../../", :nfs => true
+  config.vm.share_folder "vagrant-root", "/shared", "../../", :nfs => true
   
   # Provision with a shell script
   config.vm.provision :shell, :path => "vagrant-setup"
